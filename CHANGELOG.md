@@ -7,6 +7,8 @@
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-09-11
+
 ### Added
 
 - Тесты для `internal/conf`, `internal/priv`, `internal/vpn`: table-driven
@@ -64,5 +66,6 @@
 
 - Неиспользуемый тип `priv.Result` и поле `App.win`.
 
-[Unreleased]: https://github.com/turkprogrammer/vpnctl/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/turkprogrammer/vpnctl/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/turkprogrammer/vpnctl/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/turkprogrammer/vpnctl/releases/tag/v0.1.0
