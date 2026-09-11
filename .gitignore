@@ -1,0 +1,9 @@
+# build artifacts
+/vpnctl
+/vpnctl.prev*
+
+# agent scratch dir — never tracked
+.agents/
+
+# IDE
+.idea/

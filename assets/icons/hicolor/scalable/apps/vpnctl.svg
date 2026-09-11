@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <!-- Dark terminal identity, matching internal/ui/style.go -->
+  <rect x="3" y="3" width="122" height="122" rx="26" ry="26"
+        fill="#14161a" stroke="#272d37" stroke-width="2"/>
+
+  <!-- Shield, green = connected -->
+  <path d="M64 22 L98 35 V65 C98 84 83 98 64 105 C45 98 30 84 30 65 V35 Z"
+        fill="#1b1f26" stroke="#46d17a" stroke-width="5"
+        stroke-linejoin="round"/>
+
+  <!-- Terminal prompt: >_ -->
+  <path d="M48 52 L60 64 L48 76"
+        fill="none" stroke="#f2f4f7" stroke-width="7"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="64" y="70" width="17" height="7" rx="3.5" fill="#2f6feb"/>
+</svg>
