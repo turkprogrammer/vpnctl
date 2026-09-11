@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -82,7 +83,7 @@ func (a *App) onToggle() {
 			ep := conf.InstalledEndpoint(iface)
 			// Endpoint may be unreadable without extra privileges; Up only
 			// pre-checks reachability when it has an endpoint to use.
-			err = vpn.Up(iface, ep, upTimeout)
+			err = vpn.Up(context.Background(), iface, ep, upTimeout)
 		} else {
 			noun, gerund = "отключение", "отключения"
 			err = vpn.Down(iface)

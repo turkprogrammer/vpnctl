@@ -6,6 +6,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"flag"
 	"fmt"
@@ -27,7 +28,7 @@ const (
   vpnctl up [iface]                безопасно поднять VPN
   vpnctl down [iface]              опустить VPN
   vpnctl import <файл.conf>        импортировать конфиг в систему
-  vpnctl tray                      графический интерфейс (окно + трей)
+  vpnctl tray|ui|gui               графический интерфейс (окно)
 `
 )
 
@@ -97,7 +98,7 @@ func cmdUp(iface string) {
 		shown = "(неизвестен)"
 	}
 	fmt.Printf("поднимаю %s (сервер %s)...\n", iface, shown)
-	if err := vpn.Up(iface, ep, upTimeout); err != nil {
+	if err := vpn.Up(context.Background(), iface, ep, upTimeout); err != nil {
 		fail(err)
 	}
 	fmt.Println("VPN поднят.")

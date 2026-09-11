@@ -49,7 +49,7 @@ func InterfaceName(path string) string {
 	base := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
 	base = strings.Map(func(r rune) rune {
 		switch {
-		case r >= 'a' && r <= 'z', r >= 'A' && r <= 'Z', r >= '0' && r <= '9', r == '_', r == '-':
+		case r >= 'a' && r <= 'z', r >= '0' && r <= '9', r == '_', r == '-':
 			return r
 		default:
 			return '_'
@@ -124,10 +124,11 @@ func shquote(s string) string {
 // failed import never leaves a temp file behind. An already-installed config
 // is reported as ErrExists rather than replaced.
 func Import(path string) error {
-	if _, err := Validate(path); err != nil {
+	info, err := Validate(path)
+	if err != nil {
 		return err
 	}
-	name := InterfaceName(path)
+	name := info.Interface
 	dst := filepath.Join(SysDir, name+".conf")
 	tmp := filepath.Join(SysDir, "."+name+".tmp")
 

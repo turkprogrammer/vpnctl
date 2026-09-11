@@ -37,11 +37,18 @@ func wgErr(cmd, mode string, args []string, err error, out []byte) *Error {
 	return &Error{Mode: mode, Cmd: cmd, Args: args, Err: err, Out: string(out)}
 }
 
+// Command executes name+args and returns its combined output. It is a seam for
+// tests: the default shells out via exec.Command, and tests swap in a fake that
+// records calls or scripts responses, so no real sudo/pkexec binary is needed.
+var Command = func(name string, args ...string) ([]byte, error) {
+	cmd := exec.Command(name, args...)
+	return cmd.CombinedOutput()
+}
+
 // Run executes name (as root) with args via pkexec (graphical prompt).
 // Non-zero exit turns into a *Error with the captured output attached.
 func Run(name string, args ...string) ([]byte, error) {
-	cmd := exec.Command("pkexec", append([]string{name}, args...)...)
-	out, err := cmd.CombinedOutput()
+	out, err := Command("pkexec", append([]string{name}, args...)...)
 	if err != nil {
 		return out, wgErr(name, "pkexec", args, err, out)
 	}
@@ -50,8 +57,7 @@ func Run(name string, args ...string) ([]byte, error) {
 
 // sudo tries a passwordless sudo (NOPASSWD); errs if it needs a password.
 func sudo(name string, args ...string) ([]byte, error) {
-	cmd := exec.Command("sudo", append([]string{"-n", name}, args...)...)
-	out, err := cmd.CombinedOutput()
+	out, err := Command("sudo", append([]string{"-n", name}, args...)...)
 	if err != nil {
 		return out, wgErr(name, "sudo", args, err, out)
 	}

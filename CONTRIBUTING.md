@@ -7,9 +7,13 @@
 
 - Linux x86_64 (Ubuntu).
 - Go 1.26+.
-- Для сборки GUI — `libgtk-3-dev`, `libayatana-appindicator3-dev`
-  (`sudo apt install libgtk-3-dev libayatana-appindicator3-dev`).
-- Для запуска привилегированных команд — `awg`, `awg-quick`, `pkexec`.
+- Для сборки GUI — C-компилятор и dev-заголовки GTK3:
+  `build-essential`, `pkg-config`, `libgtk-3-dev`
+  (`sudo apt install build-essential pkg-config libgtk-3-dev`).
+- Для запуска привилегированных команд — `awg`, `awg-quick` (инструменты
+  AmneziaWG, а не стандартного WireGuard), `pkexec`.
+- Для линта — `golangci-lint` v1.64.x
+  (`go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.8`).
 
 ## Быстрый старт
 
@@ -22,8 +26,9 @@ go build -mod=vendor -o vpnctl .
 # Проверить состояние (работает без прав root)
 ./vpnctl status
 
-# Тесты
-go test ./...
+# Тесты (без sudo/pkexec — привилегии подменяются фейком)
+go test -mod=vendor ./...
+go test -mod=vendor -race ./...
 ```
 
 Сборка использует каталог `vendor/` (зависимость `gotk3` зафиксирована и
@@ -38,15 +43,30 @@ VPNCTL_CONF_DIR=/tmp/vpnctl-test ./vpnctl import example.conf
 VPNCTL_IP_URL=http://127.0.0.1:8080 ./vpnctl status
 ```
 
+Дополнительно в `internal/conf` есть фаззинг-цели для парсера конфигов
+(словарь добавляется автоматически из поддерживаемых seed-значений):
+
+```bash
+go test -mod=vendor ./internal/conf/ -run '^$' -fuzz=FuzzInterfaceName -fuzztime=60s
+go test -mod=vendor ./internal/conf/ -run '^$' -fuzz=FuzzValidate -fuzztime=60s
+```
+
+Свежее падение фаззера сохраняется в `testdata/fuzz/` — перед коммитом удалите
+сгенерированные корпусы (это служебные данные для воспроизведения, не исходники).
+
 ## Процесс работы
 
 1. Форкните репозиторий.
 2. Создайте ветку: `git checkout -b feat/my-feature`.
 3. Внесите изменения.
-4. Убедитесь, что всё собирается: `go build -mod=vendor ./...`.
-5. Запустите `go vet ./...` и `go test ./...`.
-6. Закоммитьте с сообщением в стиле репозитория (префикс `vpnctl:`),
-   например: `vpnctl: add foreign-key to app`.
+4. Убедитесь, что всё собирается и форматируется:
+   `go build -mod=vendor ./...`, `gofmt -l main.go internal/`.
+5. Запустите проверки и тесты:
+   `go vet ./...`, `go test -mod=vendor -race ./...`, `golangci-lint run ./...`.
+6. Закоммитьте с сообщением в стиле репозитория — короткий заголовок с префиксом
+   `scope:` (conventional commits): `fix:`, `feat:`, `docs:`, а код приложения —
+   с префиксом `vpnctl:`.
+   Например: `vpnctl: roll back safely when internet never appears`.
 7. Откройте Pull Request, кратко описав, что меняется и почему.
 
 ## Правила кода
