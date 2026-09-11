@@ -2,7 +2,7 @@
 //
 // Design: KISS, YAGNI, DRY. Privileged actions (up/down/import) all go through
 // priv.Run (pkexec); status checks that need no privileges run as the user. The
-// GUI (future) will call the exact same functions below.
+// GUI (internal/ui) reuses the same core logic in internal/vpn and internal/conf.
 package main
 
 import (

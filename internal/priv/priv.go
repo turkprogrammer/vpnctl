@@ -20,11 +20,6 @@ import (
 	"os/exec"
 )
 
-// Result holds a finished privileged command.
-type Result struct {
-	Output []byte
-}
-
 // Error carries context about a failed privileged command.
 type Error struct {
 	Mode string

@@ -23,7 +23,6 @@ const (
 
 // App holds the widgets we poke from goroutines.
 type App struct {
-	win        *gtk.Window
 	toggle     *gtk.ToggleButton
 	stateLbl   *gtk.Label
 	stateDot   *gtk.Label
@@ -116,8 +115,6 @@ func (a *App) build() {
 	win.SetTitle("AmneziaWG VPN")
 	win.SetDefaultSize(winW, winH)
 	win.SetResizable(true)
-	a.win = win
-
 	win.Add(a.buildContent())
 	win.Connect("destroy", func() { gtk.MainQuit() })
 	win.ShowAll()
