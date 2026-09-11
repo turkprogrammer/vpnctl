@@ -7,3 +7,6 @@
 
 # IDE
 .idea/
+
+# LLM helper docs — not tracked
+llms.txt
